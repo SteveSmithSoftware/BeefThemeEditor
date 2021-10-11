@@ -1,4 +1,4 @@
-# BeefThemeEditor
+# Beef Theme Editor
 
  GUI Editor for Beef IDE Themes
 
