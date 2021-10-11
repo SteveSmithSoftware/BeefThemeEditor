@@ -12,4 +12,4 @@ The editor has 3 configurable parameters (found in the .config file)
  
  ImageEditor - External image editor for editing the images. Default mspaint.exe.
  
- 
+ The supplied Default theme contains the .png's from the Beef repository and the theme.toml file used in the Beef version from this Github.
