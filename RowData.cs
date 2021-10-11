@@ -1,54 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace BeefThemeEditor
 {
 	public class RowData
 	{
-		public enum Type : byte
-		{
-			toml,png
-		}
-		public string fileName;
-		public List<string> hexValues = new List<string>();
-		public List<string> newHexValues = new List<string>();
-		public List<Color> colours = new List<Color>();
-		public List<Color> newColours = new List<Color>();
-		public Bitmap currImg;
-		public Bitmap newImg;
-		public int ix;
-		public Type type;
-		public int scale=1;
-		public bool updated = false;
+		public string Name;
+		public string Comment;
+		public string HexValue;
+		public string NewHexValue;
+		public Color Colour;
+		public Color NewColour;
+		public Bitmap CurrImg;
+		public Bitmap NewImg;
+		public int Ix;
+		public bool Updated = false;
+		public int X;
+		public int Y;
 
-		public RowData(string file, Type type)
+		public void Set(string hexValue, Color color)
 		{
-			fileName = file;
-			this.type = type;
-		}
-
-		public void Add(string hexValue, Color color)
-		{
-			hexValues.Add(hexValue);
-			newHexValues.Add(null);
-			colours.Add(color);
-			newColours.Add(new System.Drawing.Color());
-		}
-
-		public int GetIx(string hexValue)
-		{
-			for (ix = 0; ix < hexValues.Count; ix++)
-			{
-				if (hexValues[ix] == hexValue)
-				{
-					break;
-				}
-			}
-			return ix;
+			HexValue=hexValue;
+			NewHexValue= null;
+			Colour= color;
+			NewColour = new System.Drawing.Color();
 		}
 
 		public enum ImageIdx

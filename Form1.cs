@@ -16,11 +16,22 @@ namespace BeefThemeEditor
 	public partial class Form1 : Form
 	{
 		TomlTable table;
-		Dictionary<string,Dictionary<int, RowData>> rows = new Dictionary<string, Dictionary<int, RowData>>();
-		Dictionary<int, RowData> currDict;
+		List<TabData> tabs = new List<TabData>();
+		TabPage currTab;
+		TabData currTD;
 		RowData currRow;
 		int currIx=-1;
+
 		DataGridView currDgv;
+		DataGridView.HitTestInfo hti;
+		Bitmap copyBM=null;
+
+		enum OpenType : byte
+		{
+			None,
+			Theme, Toml, Png
+		}
+		OpenType oType;
 
 		public Form1()
 		{
@@ -28,16 +39,22 @@ namespace BeefThemeEditor
 			OpenToml.MouseUp += toolStrip_MouseUp;
 			OpenTheme.MouseUp += toolStrip_MouseUp;
 			OpenPNG.MouseUp += toolStrip_MouseUp;
+			Save.MouseUp += toolStrip_MouseUp;
+			SaveAs.MouseUp += toolStrip_MouseUp;
+			Exit.MouseUp += toolStrip_MouseUp;
 			folderBrowserDialog1.ShowNewFolderButton = false;
 			string dir = Utility.getConfigString("WorkingDirectory", Directory.GetCurrentDirectory());
 			folderBrowserDialog1.SelectedPath = dir;
 			openFileDialog1.InitialDirectory = dir;
+			openFileDialog1.FileName = "theme.toml";
 			tabControl1.Controls.Remove(tabPage1);
+			tabControl1.MouseUp += tabPage_MouseUp;
+
 		}
 
-		void DataError(object sender, DataGridViewDataErrorEventArgs e)	{	}
+		void dataError(object sender, DataGridViewDataErrorEventArgs e)	{	}
 
-		private void toolStrip_MouseUp(object sender, MouseEventArgs e)
+		void toolStrip_MouseUp(object sender, MouseEventArgs e)
 		{
 			ToolStripMenuItem tsmi = (ToolStripMenuItem)sender;
 			errMsg.Text = "";
@@ -48,7 +65,7 @@ namespace BeefThemeEditor
 						if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
 						{
 							Cursor = Cursors.WaitCursor;
-							CleanUp();
+							cleanUp();
 							string dir = folderBrowserDialog1.SelectedPath;
 							label1.Text = getTheme(dir);
 							string[] files = Directory.GetFiles(dir);
@@ -58,10 +75,10 @@ namespace BeefThemeEditor
 								switch (Path.GetExtension(file).ToLower())
 								{
 									case ".toml":
-										if (ProcessToml(file)) fileCnt++;
+										if (processToml(file)) fileCnt++;
 										break;
 									case ".png":
-										if (ProcessPng(file)) fileCnt++;
+										if (processPng(file)) fileCnt++;
 										break;
 									default:
 										break;
@@ -70,6 +87,9 @@ namespace BeefThemeEditor
 							if (fileCnt == 0)
 							{
 								errMsg.Text = "No valid files found to process";
+							} else
+							{
+								oType = OpenType.Theme;
 							}
 						}
 					}
@@ -81,9 +101,12 @@ namespace BeefThemeEditor
 						{
 							Cursor = Cursors.WaitCursor;
 							openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-							CleanUp();
+							cleanUp();
 							label1.Text = getTheme(Path.GetDirectoryName(openFileDialog1.FileName));
-							ProcessToml(openFileDialog1.FileName);
+							if (processToml(openFileDialog1.FileName))
+							{
+								oType = OpenType.Toml;
+							}
 						}
 					}
 					break;
@@ -94,11 +117,75 @@ namespace BeefThemeEditor
 						{
 							Cursor = Cursors.WaitCursor;
 							openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-							CleanUp();
+							cleanUp();
 							label1.Text = getTheme(Path.GetDirectoryName(openFileDialog1.FileName));
-							ProcessPng(openFileDialog1.FileName);
+							if (processPng(openFileDialog1.FileName))
+							{
+								oType = OpenType.Png;
+							}
 						}
 					}
+					break;
+				case "Save":
+					switch (oType)
+					{
+						case OpenType.Theme:
+							saveTheme();
+							break;
+						case OpenType.Toml:
+							saveToml();
+							break;
+						case OpenType.Png:
+							currTD.savePng();
+							break;
+						default:
+							errMsg.Text = "Nothing Open to Save";
+							break;
+					}
+					break;
+				case "SaveAs":
+					switch (oType)
+					{
+						case OpenType.Theme:
+							if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+							{
+								Cursor = Cursors.WaitCursor;
+								saveTheme(folderBrowserDialog1.SelectedPath);
+							}
+							break;
+						case OpenType.Toml:
+							{
+								saveFileDialog1.Filter = "Toml Files (*.toml)|*.toml";
+								saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(currTD.Filename);
+								if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+								{
+									Cursor = Cursors.WaitCursor;
+									foreach (TabData td1 in tabs)
+									{
+										td1.Filename = saveFileDialog1.FileName;
+									}
+									saveToml();
+								}
+							}
+							break;
+						case OpenType.Png:
+							{
+								saveFileDialog1.Filter = "Png Files (*.png)|*.png";
+								saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(currTD.Filename);
+								if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+								{
+									Cursor = Cursors.WaitCursor;
+									currTD.savePng(saveFileDialog1.FileName);
+								}
+							}
+							break;
+						default:
+							errMsg.Text = "Nothing Open to Save";
+							break;
+					}
+					break;
+				case "Exit":
+					Application.Exit();
 					break;
 				default:
 					break;
@@ -112,6 +199,16 @@ namespace BeefThemeEditor
 			return sa[sa.Length - 1];
 		}
 
+		void tabPage_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+					ContextMenu m = new ContextMenu();
+					m.MenuItems.Add(new MenuItem("Delete", deleteTabPage));
+					m.Show(currDgv, new Point(e.X, e.Y));
+			}
+		}
+
 		DataGridView makeDGV(bool usedIn)
 		{
 			DataGridView dgv = new DataGridView();
@@ -119,11 +216,11 @@ namespace BeefThemeEditor
 			dgv.RowHeadersVisible = false;
 			dgv.AllowUserToDeleteRows = false;
 			dgv.AllowUserToAddRows = false;
-			dgv.CellContentClick += new DataGridViewCellEventHandler(dataGridView1_CellContentClick);
-			dgv.MouseClick += new MouseEventHandler(dataGridView1_MouseClick);
-			dgv.Scroll += new ScrollEventHandler(dataGridView1_Scroll);
-			dgv.DataError += new DataGridViewDataErrorEventHandler(DataError);
-			dgv.CellFormatting += new DataGridViewCellFormattingEventHandler(CellFormatting);
+			dgv.CellContentClick += new DataGridViewCellEventHandler(dataGridView_CellContentClick);
+			dgv.MouseClick += new MouseEventHandler(dataGridView_MouseClick);
+			dgv.Scroll += new ScrollEventHandler(dataGridView_Scroll);
+			dgv.DataError += new DataGridViewDataErrorEventHandler(dataError);
+			dgv.CellFormatting += new DataGridViewCellFormattingEventHandler(cellFormatting);
 
 			dgv.Columns.Add(makeTextColumn("Description",300));
 			dgv.Columns.Add(makeTextColumn("Hex Colour"));
@@ -178,23 +275,30 @@ namespace BeefThemeEditor
 			return cb;
 		}
 
-		void dataGridView1_MouseClick(object sender, MouseEventArgs e)
+		void dataGridView_MouseClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right)
 			{
-				DataGridView.HitTestInfo hti = currDgv.HitTest(e.X, e.Y);
+				colorEditor1.Visible = false;
+				hti = currDgv.HitTest(e.X, e.Y);
 				int row = hti.RowIndex;
 				int col = hti.ColumnIndex;
 
 				if (row >= 0)
 				{
-					currRow = currDict[row];
-					currIx = row;
+					currRow = currTD.rows[row];
 					ContextMenu m = new ContextMenu();
 					m.MenuItems.Add(new MenuItem("Copy", copy_Click));
 					m.MenuItems.Add(new MenuItem("Paste", paste_Click));
-					m.MenuItems.Add(new MenuItem("Edit", edit_Click));
-					m.MenuItems.Add(new MenuItem("Delete"));
+					if (currTD.Datatype == TabData.DataType.png)
+					{
+						m.MenuItems.Add(new MenuItem("Edit", edit_Click));
+					}
+					if (currRow.Updated) m.MenuItems.Add(new MenuItem("Clear", clear_Click));
+					if (currTD.Datatype == TabData.DataType.toml)
+					{
+						m.MenuItems.Add(new MenuItem("Delete", delete_Click));
+					}
 
 					m.Show(currDgv, new Point(e.X, e.Y));
 				}
@@ -202,47 +306,201 @@ namespace BeefThemeEditor
 			}
 		}
 
+		void clear_Click(object sender, System.EventArgs e)
+		{
+			int row = hti.RowIndex;
+			int col = hti.ColumnIndex;
+			errMsg.Text = "";
+			currRow.Updated = false;
+			currRow.NewHexValue = null;
+			currRow.NewImg = null;
+			currDgv[3, row].Value = string.Empty;
+			Bitmap bm;
+			if (currTD.Datatype == TabData.DataType.toml) {
+				bm = new Bitmap(32, 32);
+			} else
+			{
+				bm = new Bitmap(20 * currTD.Scale, 20 * currTD.Scale);
+			}
+			currDgv[4, row].Value = bm;
+		}
+
 		void copy_Click(object sender, System.EventArgs e)
 		{
-			if (currRow.updated) Clipboard.SetImage(currRow.newImg);
-			else Clipboard.SetImage(currRow.currImg);
+			int row = hti.RowIndex;
+			int col = hti.ColumnIndex;
+			switch (col)
+			{
+				case 0:
+					Clipboard.SetText(currRow.Name);
+					break;
+				case 1:
+					Clipboard.SetText(currRow.HexValue);
+					break;
+				case 3:
+					if (currRow.Updated) Clipboard.SetText(currRow.NewHexValue);
+					break;
+				case 5:
+					Clipboard.SetText(currRow.Comment);
+					break;
+				default:
+					if (currRow.Updated) copyBM = currRow.NewImg;
+					else copyBM = currRow.CurrImg;
+					break;
+			}
 		}
 
 		void paste_Click(object sender, System.EventArgs e)
 		{
-			currRow.newImg = (Bitmap)Clipboard.GetImage();
-			currDgv[4, currIx].Value = currRow.newImg;
-			currRow.updated = true;
+			int row = hti.RowIndex;
+			int col = hti.ColumnIndex;
+			errMsg.Text = "";
+			switch (col)
+			{
+				case 3:
+					if (Clipboard.ContainsText())
+					{
+						string hexVal = Clipboard.GetText();
+						try
+						{
+							int c = Convert.ToInt32(hexVal, 16);
+
+							currDgv[col, row].Value = hexVal;
+							currRow.NewHexValue = hexVal;
+							currRow.Updated = true;
+							Color color;
+							currRow.NewImg = makeBitmap(hexVal, currTD.Scale, out color);
+							currDgv[4, row].Value = currRow.NewImg;
+						}
+						catch
+						{
+							errMsg.Text = "Clipboard does not contain a hex Color value";
+						}
+					}
+					else
+					{
+						errMsg.Text = "Cannot paste from Clipboard";
+					}
+					break;
+				case 5:
+					if (Clipboard.ContainsText())
+					{
+						currDgv[col, row].Value = Clipboard.GetText();
+						currRow.Comment = Clipboard.GetText();
+						currRow.Updated = true;
+					}
+					else
+					{
+						errMsg.Text = "No Text in Clipboard";
+					}
+					break;
+				default:
+					if (currTD.Datatype == TabData.DataType.png && copyBM != null)
+					{
+						Bitmap bm = new Bitmap(copyBM.Width, copyBM.Height);
+						for (int x = 0; x < bm.Width; x++)
+						{
+							for (int y=0;y<bm.Height;y++)
+							{
+								bm.SetPixel(x, y, copyBM.GetPixel(x, y));
+							}
+						}
+						
+						Bitmap bm1 = Utility.ResizeImage(bm, 20 * currTD.Scale, 20 * currTD.Scale);
+						currRow.NewImg = bm1;
+						currDgv[4, row].Value = bm1;
+
+						Dictionary<int, Color> colDict = new Dictionary<int, Color>();
+						for (int x=0;x<bm1.Width;x++)
+						{
+							for (int y=0;y<bm1.Height;y++)
+							{
+								Color color = bm1.GetPixel(x, y);
+								if (color.ToArgb().ToString("x").PadLeft(8, '0').StartsWith("00"))
+								{
+									//color = Color.FromArgb(Convert.ToInt32("00ffffff", 16));
+								}
+								else
+								{
+									int col1 = color.ToArgb();
+									if (!colDict.ContainsKey(col1))
+									{
+										colDict.Add(col1, color);
+									}
+								}
+							}
+						}
+						int[] colvals = colDict.Keys.ToArray();
+						string[] sa = new string[colvals.Length];
+						for (int k = 0; k < colvals.Length; k++)
+						{
+							sa[k] = colvals[k].ToString("x").PadLeft(8, '0');
+						}
+
+						if (colvals.Length == 1)
+						{
+							currDgv[3,row] = makeTextCell(sa[0]);
+						}
+						else
+						{
+							//currDgv[3, row] = makeComboCell(sa);
+							currDgv[3, row] = makeTextCell(string.Empty);
+						}
+
+						currRow.Updated = true;
+					}
+					else
+					{
+						errMsg.Text = "Cannot paste from Clipboard";
+					}
+					break;
+			}
 		}
 
 		void edit_Click(object sender, System.EventArgs e)
 		{
+			int row = hti.RowIndex;
+			int col = hti.ColumnIndex;
 			Cursor = Cursors.WaitCursor;
 			string fileName = Path.Combine(Directory.GetCurrentDirectory(), "temp.png");
 			if (File.Exists(fileName)) File.Delete(fileName);
-			if (currRow.updated) currRow.newImg.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-			else currRow.currImg.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+			if (col==4) currRow.NewImg.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+			else currRow.CurrImg.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 			string spawn = Utility.getConfigString("ImageEditor", "mspaint.exe");
 			Process process = Process.Start(spawn, fileName);
 			process.WaitForExit();
 			process.Dispose();
 			Bitmap bm = (Bitmap)Bitmap.FromFile(fileName);
-			currRow.newImg = new Bitmap(bm.Width, bm.Height);
+			currRow.NewImg = new Bitmap(bm.Width, bm.Height);
 			for (int x=0;x<bm.Width;x++)
 			{
 				for (int y=0;y<bm.Height;y++)
 				{
-					currRow.newImg.SetPixel(x,y,bm.GetPixel(x, y));
+					currRow.NewImg.SetPixel(x,y,bm.GetPixel(x, y));
 				}
 			}
+			currRow.NewImg = Utility.ResizeImage(currRow.NewImg, 20 * currTD.Scale, 20 * currTD.Scale);
 			bm.Dispose();
-			currDgv[4, currIx].Value = currRow.newImg;
-			currRow.updated = true;
+			currDgv[4, currIx].Value = currRow.NewImg;
+			currRow.Updated = true;
 			if (File.Exists(fileName)) File.Delete(fileName);
 			Cursor = Cursors.Default;
 		}
 
-		void CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		void delete_Click(object sender, System.EventArgs e)
+		{
+			int row = hti.RowIndex;
+			int col = hti.ColumnIndex;
+			currDgv.Rows.RemoveAt(row);
+			currTD.rows.RemoveAt(row);
+			currRow = null;
+			if  (currTD.rows.Count==0)
+			{
+				deleteTabPage(sender,e);
+			}
+		}
+
+		void cellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
 			if (e.ColumnIndex == 2 || e.ColumnIndex == 4)
 			{
@@ -253,13 +511,14 @@ namespace BeefThemeEditor
 			}
 		}
 
-		void CleanUp()
+		void cleanUp()
 		{
-			rows.Clear();
+			tabs.Clear();
 			tabControl1.Controls.Clear();
+			oType = OpenType.None;
 		}
 
-		bool ProcessToml(string fileName)
+		bool processToml(string fileName)
 		{
 			Stream fileStream = File.Open(fileName, FileMode.Open);
 			using (TextReader tr = new StreamReader(fileStream))
@@ -277,8 +536,10 @@ namespace BeefThemeEditor
 					TabPage tp = tabPage1.Clone();
 					tp.Text = kvp1.Key;
 					tabControl1.Controls.Add(tp);
-					rows.Add(kvp1.Key, new Dictionary<int, RowData>());
-					currDict = rows[kvp1.Key];
+					TabData td = new TabData(kvp1.Key, fileName, TabData.DataType.toml);
+					td.Scale = 0;
+					tabs.Add(td);
+					currTD = td;
 
 					DataGridView dgv = makeDGV(true);
 					tp.Controls.Add(dgv);
@@ -289,16 +550,10 @@ namespace BeefThemeEditor
 						DataGridViewRow dgr = dgv.Rows[row];
 						dgr.Height = 32;
 						dgr.Cells[0].Value = kvp.Key;
-						dgr.Cells[1].Value = kvp.Value.ToInlineToml();
-						Bitmap bm = new Bitmap(32, 32);
-						Color color = System.Drawing.Color.FromArgb((int)((TomlInteger)kvp.Value).Value);
-						for (int x = 0; x < 32; x++)
-						{
-							for (int y = 0; y < 32; y++)
-							{
-								bm.SetPixel(x, y, color);
-							}
-						}
+						string hexVal = kvp.Value.ToInlineToml().Replace("0x", "");
+						dgr.Cells[1].Value = hexVal;
+						Color color;
+						Bitmap bm = makeBitmap(hexVal, 0, out color);
 						dgr.Cells[2].Value = bm;
 						dgr.Cells[3].Value = string.Empty;
 						Bitmap bm1 = new Bitmap(32, 32);
@@ -306,33 +561,52 @@ namespace BeefThemeEditor
 
 						dgr.Cells[5].Value = kvp.Value.Comment;
 
-						RowData rd = new RowData(fileName, RowData.Type.toml);
-						rd.currImg = bm;
-						rd.newImg = bm1;
-						rd.Add(kvp.Value.ToInlineToml(), color);
-						currDict.Add(row, rd);
-						//tp.Refresh();
+						RowData rd = new RowData();
+						rd.Name = kvp.Key;
+						rd.Comment = kvp.Value.Comment;
+						rd.CurrImg = bm;
+						rd.NewImg = bm1;
+						rd.Set(hexVal, color);
+						td.rows.Add(rd);
 					}
 				}
 			}
-			SetTabPage(tabControl1.TabPages[0]);
+			setTabPage(tabControl1.TabPages[0]);
 			return true;
 		}
 
-		bool ProcessPng(string fileName)
+		Bitmap makeBitmap(string hexVal, int scale, out Color color)
+		{
+			int size = (scale == 0) ? 32 : 20 * scale;
+			Bitmap bm = new Bitmap(size, size);
+			int c = Convert.ToInt32(hexVal, 16);
+			color = Color.FromArgb(c);
+			for (int x = 0; x < bm.Width; x++)
+			{
+				for (int y = 0; y < bm.Height; y++)
+				{
+					bm.SetPixel(x, y, color);
+				}
+			}
+			return bm;
+		}
+
+		bool processPng(string fileName)
 		{
 			string file = Path.GetFileNameWithoutExtension(fileName);
 			TabPage tp = tabPage1.Clone();
 			tp.Text = file;
 			tabControl1.Controls.Add(tp);
-			rows.Add(file, new Dictionary<int, RowData>());
-			currDict = rows[file];
+			TabData td = new TabData(file, fileName, TabData.DataType.png);
+			tabs.Add(td);
+			currTD = td;
 
 			DataGridView dgv = makeDGV(false);
 			tp.Controls.Add(dgv);
 
 			Bitmap bm = (Bitmap)Image.FromFile(fileName);
 			int fact = bm.Width / 400;
+			td.Scale = fact;
 			if (bm.Width % 400 != 0 || bm.Height % 160 != 0)
 			{
 				errMsg.Text = "Invalid PNG file " + fileName;
@@ -350,17 +624,20 @@ namespace BeefThemeEditor
 					y1 = 0;
 					for (int y = h; y < h + (20*fact); y++)
 					{
-						System.Drawing.Color color = bm.GetPixel(x, y);
-						if (color.ToArgb().ToString("x").PadLeft(8,'0').StartsWith("0"))
+						Color color = bm.GetPixel(x, y);
+						if (color.ToArgb().ToString("x").PadLeft(8, '0').StartsWith("00"))
 						{
-							color = Color.FromArgb(Convert.ToInt32("00ffffff", 16));
+							//color = Color.FromArgb(Convert.ToInt32("00ffffff", 16));
+						}
+						else
+						{
+							int col = color.ToArgb();
+							if (!colDict.ContainsKey(col))
+							{
+								colDict.Add(col, color);
+							}
 						}
 						bm1.SetPixel(x1, y1, color);
-						int col = color.ToArgb();
-						if (col.ToString("x").PadLeft(8,'0') != "00ffffff" && !colDict.ContainsKey(col))
-						{
-							colDict.Add(col, color);
-						}
 						y1++;
 					}
 					x1++;
@@ -368,8 +645,9 @@ namespace BeefThemeEditor
 					if ((x + 1) % (20*fact) == 0)
 					{
 						DataGridViewRow dgr = new DataGridViewRow();
-						RowData rd = new RowData(fileName, RowData.Type.png);
-						rd.scale = fact;
+						RowData rd = new RowData();
+						rd.X = x - (20 * fact)+1;
+						rd.Y = h;
 
 						dgr.Height = (20*fact)+12;
 
@@ -379,28 +657,29 @@ namespace BeefThemeEditor
 						string[] sa = new string[colvals.Length];
 						for (int k = 0; k < colvals.Length; k++)
 						{
-							sa[k] = "0x" + colvals[k].ToString("x").PadLeft(8,'0');
+							sa[k] = colvals[k].ToString("x").PadLeft(8,'0');
 						}
 
-						if (colvals.Length==1)
+						if (colvals.Length <2)
 						{
-							dgr.Cells.Add(makeTextCell(sa[0]));
+							string s = string.Empty;
+							if (colvals.Length == 1)
+							{
+								s = sa[0];
+								rd.Set(s, colDict[colvals[0]]);
+							}
+							dgr.Cells.Add(makeTextCell(s));
 						} else
 						{
-							dgr.Cells.Add(makeComboCell(sa));
+							//dgr.Cells.Add(makeComboCell(sa));
+							dgr.Cells.Add(makeTextCell(string.Empty));
 						}
 
 						dgr.Cells.Add(makeImageCell(bm1));
 						dgv.Columns[2].Width = bm1.Width + 12;
 
-						if (colvals.Length == 1)
-						{
-							dgr.Cells.Add(makeTextCell(sa[0]));
-						}
-						else
-						{
-							dgr.Cells.Add(makeComboCell(sa));
-						}
+						dgr.Cells.Add(makeTextCell(string.Empty));
+
 
 						Bitmap bm2 = new Bitmap(20*fact, 20*fact);
 						dgr.Cells.Add(makeImageCell(bm2));
@@ -409,33 +688,93 @@ namespace BeefThemeEditor
 						int row = dgv.RowCount;
 						dgv.Rows.Add(dgr);
 
-						foreach (KeyValuePair<int, Color> kvp in colDict)
-						{
-							rd.Add("0x" + kvp.Key.ToString("x").PadLeft(8, '0'), kvp.Value);
-						}
-						rd.currImg = bm1;
-						rd.newImg = bm2;
-						currDict.Add(row, rd);
+						rd.CurrImg = bm1;
+						rd.NewImg = bm2;
+						currTD.rows.Add(rd);
 						colDict.Clear();
 
 						bm1 = new Bitmap(20*fact, 20*fact);
 						x1 = 0;
 						i++;
-						//tp.Refresh();
 					}
 				}
 			}
-			SetTabPage(tabControl1.TabPages[0]);
+			setTabPage(tabControl1.TabPages[0]);
 			return true;
 		}
 
-		private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		void saveTheme(string dir=null)
 		{
+			if (!string.IsNullOrEmpty(dir))
+			{
+				foreach (TabData td in tabs)
+				{
+					string file = Path.GetFileName(td.Filename);
+					if (td.Datatype == TabData.DataType.toml)
+					{
+						td.Filename = Path.Combine(dir, file);
+					} else
+					{
+						td.savePng(Path.Combine(dir, file));
+					}
+				}
+			}
+			else
+			{
+				foreach (TabData td in tabs)
+				{
+					if (td.Datatype== TabData.DataType.png) td.savePng();
+				}
+			}
+			saveToml();
+		}
+
+		void saveToml()
+		{
+			List<string> output = new List<string>();
+			bool first = true;
+			string outFile=string.Empty;
+			foreach (TabData td in tabs)
+			{
+				if (td.rows.Count == 0) continue;
+				if (td.Datatype == TabData.DataType.toml)
+				{
+					if (first)
+					{
+						outFile = td.Filename;
+						first = false;
+					} else
+					{
+						if (td.Filename != outFile)
+						{
+							File.WriteAllLines(outFile, output.ToArray());
+							output.Clear();
+							outFile = td.Filename;
+						}
+					}
+					output.Add("[" + td.Name + "]");
+					foreach (RowData rd in td.rows)
+					{
+						string hexVal = (string.IsNullOrEmpty(rd.NewHexValue)) ? rd.HexValue : rd.NewHexValue;
+						output.Add(rd.Name + " = 0x" + hexVal + " #" + rd.Comment);
+					}
+					output.Add("");
+				}
+			}
+			File.WriteAllLines(outFile, output.ToArray());
+		}
+
+
+		void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		{
+			colorEditor1.Visible = false;
 			if (e.RowIndex==currIx)
 			{
-				colorEditor1.Visible = false;
 				return;
 			}
+			currIx = e.RowIndex;
+			currRow = currTD.rows[e.RowIndex];
+			if (string.IsNullOrEmpty(currRow.HexValue)) return;
 			if (e.ColumnIndex == 2 || e.ColumnIndex == 4)
 			{
 				currDgv = (DataGridView)sender;
@@ -446,76 +785,119 @@ namespace BeefThemeEditor
 				p.X += r.Width;
 				p.Y += r.Height;
 
-				currRow = currDict[e.RowIndex];
-				currIx = e.RowIndex;
 
-				string hexValue = dgr.Cells[1].Value.ToString();
-				int ix = currRow.GetIx(hexValue);
-				if (e.ColumnIndex==2 || currRow.newHexValues[ix]==null)
+				string hexValue = dgr.Cells[e.ColumnIndex-1].Value.ToString();
+				if (e.ColumnIndex==2 || currRow.NewHexValue==null)
 				{
-					currRow.newColours[ix] = currRow.colours[ix];
-					currRow.newHexValues[ix] = hexValue;
+					currRow.NewColour = currRow.Colour;
+					currRow.NewHexValue = hexValue;
+					currRow.NewImg = currRow.CurrImg;
 				}
-				colorEditor1.Color = currRow.newColours[ix];
+				colorEditor1.Color = currRow.NewColour;
 				colorEditor1.Location = p;
 				colorEditor1.ShowAlphaChannel = true;
 				colorEditor1.Visible = true;
 				colorEditor1.BringToFront();
-			} else
-			{
-				colorEditor1.Visible = false;
 			}
 		}
 
-		private void colorEditor1_ColorChanged(object sender, EventArgs e)
+		string ColorToHex(Color color)
 		{
-			System.Drawing.Color color = colorEditor1.Color;
+			int c = color.ToArgb();
+			return c.ToString("x").PadLeft(8, '0');
+		}
+
+		void colorEditor1_ColorChanged(object sender, EventArgs e)
+		{
+			Color color = colorEditor1.Color;
 			DataGridViewRow dgr = currDgv.Rows[currIx];
 
-			Bitmap bm = new Bitmap(32, 32);
-			for (int x = 0; x < 32; x++)
+			string hexVal = ColorToHex(color);
+			dgr.Cells[3].Value = hexVal;
+
+			Bitmap bm;
+			if (currTD.Datatype== TabData.DataType.toml) bm = makeBitmap(hexVal, 0, out color);
+			else
 			{
-				for (int y = 0; y < 32; y++)
+				bm = new Bitmap(20 * currTD.Scale, 20 * currTD.Scale);
+				for (int x=0;x<bm.Width;x++)
 				{
-					bm.SetPixel(x, y, color);
+					for (int y=0;y<bm.Height;y++)
+					{
+						Color col = currRow.NewImg.GetPixel(x, y);
+						if (col == currRow.NewColour)
+						{
+							bm.SetPixel(x, y, color);
+						}
+					}
 				}
 			}
+			currRow.NewHexValue = hexVal;
+			currRow.NewColour = color;
+			currRow.Updated = true;
+			currRow.NewImg = bm;
 			dgr.Cells[4].Value = bm;
 
-			int c = color.ToArgb();
-			dgr.Cells[3].Value = "0x"+c.ToString("x").PadLeft(8, '0');
-			currRow.newHexValues[currRow.ix] = "0x"+c.ToString("x").PadLeft(8, '0');
-			currRow.newColours[currRow.ix] = color;
 		}
 
-		private void dataGridView1_Scroll(object sender, ScrollEventArgs e)
+		void dataGridView_Scroll(object sender, ScrollEventArgs e)
 		{
+			
 			if (colorEditor1.Visible)
 			{
-				Rectangle r = currDgv.GetCellDisplayRectangle(4, currIx, true);
-				Point p = r.Location;
-				p.X += r.Width;
-				p.Y += r.Height;
-				colorEditor1.Location = p;
+				DataGridViewRow dgr = currDgv.Rows[currIx];
+				if (dgr.Displayed)
+				{
+					Rectangle r = currDgv.GetCellDisplayRectangle(4, currIx, true);
+					Point p = r.Location;
+					p.X += r.Width;
+					p.Y += r.Height;
+					colorEditor1.Location = p;
+					colorEditor1.BringToFront();
+				} else
+				{
+					colorEditor1.SendToBack();
+				}
 			}
 		}
 
-		private void tabControl1_Selected(object sender, TabControlEventArgs e)
+		void tabControl1_Selected(object sender, TabControlEventArgs e)
 		{
-			SetTabPage(e.TabPage);
+			setTabPage(e.TabPage);
 		}
 
-		void SetTabPage(TabPage tabPage)
+		void setTabPage(TabPage tabPage)
 		{
-			if (rows.Count>0)
+			if (tabs.Count>0)
 			{
 				currIx = -1;
-				currDict = rows[tabPage.Text];
+				currTD = getTD(tabPage.Text);
 				currDgv = (DataGridView)tabPage.Controls[0];
+				currTab = tabPage;
 				colorEditor1.Visible = false;
 				if (!tabPage.Controls.Contains(colorEditor1))
 					tabPage.Controls.Add(colorEditor1);
 			}
+		}
+
+		void deleteTabPage(object sender, System.EventArgs e)
+		{
+			tabs.Remove(currTD);
+			currTD = null;
+			currRow = null;
+			currIx = -1;
+			currDgv = null;
+			tabControl1.Controls.Remove(currTab);
+			colorEditor1.Visible = false;
+		}
+
+		TabData getTD(string name)
+		{
+			foreach (TabData td in tabs)
+			{
+				if (td.Name == name) return td;
+			}
+			return null;
 		}
 	}
 }
