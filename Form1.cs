@@ -775,10 +775,10 @@ namespace BeefThemeEditor
 			colorEditor1.Visible = false;
 			currIx = e.RowIndex;
 			currRow = currTD.rows[e.RowIndex];
+			DataGridViewRow dgr = currDgv.Rows[e.RowIndex];
+			DataGridViewCell dgc = dgr.Cells[e.ColumnIndex];
 			if (e.ColumnIndex==3)
 			{
-				DataGridViewRow dgr = currDgv.Rows[e.RowIndex];
-				DataGridViewCell dgc = dgr.Cells[e.ColumnIndex];
 				Color color;
 				string hexValue = dgc.Value.ToString();
 				Bitmap bm = makeBitmap(hexValue, currTD.Scale, out color);
@@ -793,6 +793,10 @@ namespace BeefThemeEditor
 				{
 					errMsg.Text = "Invalid Hex Color code";
 				}
+			}
+			if (e.ColumnIndex==5)
+			{
+				currRow.Comment = dgc.Value.ToString();
 			}
 		}
 
