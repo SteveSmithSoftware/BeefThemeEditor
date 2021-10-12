@@ -221,6 +221,7 @@ namespace BeefThemeEditor
 			dgv.Scroll += new ScrollEventHandler(dataGridView_Scroll);
 			dgv.DataError += new DataGridViewDataErrorEventHandler(dataError);
 			dgv.CellFormatting += new DataGridViewCellFormattingEventHandler(cellFormatting);
+			dgv.CellEndEdit += new DataGridViewCellEventHandler(dataGridView_Edit);
 
 			dgv.Columns.Add(makeTextColumn("Description",300));
 			dgv.Columns.Add(makeTextColumn("Hex Colour"));
@@ -577,18 +578,23 @@ namespace BeefThemeEditor
 
 		Bitmap makeBitmap(string hexVal, int scale, out Color color)
 		{
-			int size = (scale == 0) ? 32 : 20 * scale;
-			Bitmap bm = new Bitmap(size, size);
-			int c = Convert.ToInt32(hexVal, 16);
-			color = Color.FromArgb(c);
-			for (int x = 0; x < bm.Width; x++)
+			try
 			{
-				for (int y = 0; y < bm.Height; y++)
+				int size = (scale == 0) ? 32 : 20 * scale;
+				int c = Convert.ToInt32(hexVal, 16);
+				color = Color.FromArgb(c);
+				Bitmap bm = new Bitmap(size, size);
+				for (int x = 0; x < bm.Width; x++)
 				{
-					bm.SetPixel(x, y, color);
+					for (int y = 0; y < bm.Height; y++)
+					{
+						bm.SetPixel(x, y, color);
+					}
 				}
-			}
-			return bm;
+				return bm;
+			} catch	{	}
+			color = new Color();
+			return null;
 		}
 
 		bool processPng(string fileName)
@@ -764,6 +770,32 @@ namespace BeefThemeEditor
 			File.WriteAllLines(outFile, output.ToArray());
 		}
 
+		void dataGridView_Edit(object sender, DataGridViewCellEventArgs e)
+		{
+			colorEditor1.Visible = false;
+			currIx = e.RowIndex;
+			currRow = currTD.rows[e.RowIndex];
+			if (e.ColumnIndex==3)
+			{
+				DataGridViewRow dgr = currDgv.Rows[e.RowIndex];
+				DataGridViewCell dgc = dgr.Cells[e.ColumnIndex];
+				Color color;
+				string hexValue = dgc.Value.ToString();
+				Bitmap bm = makeBitmap(hexValue, currTD.Scale, out color);
+				if (bm != null)
+				{
+					dgr.Cells[4].Value = bm;
+					currRow.NewColour = color;
+					currRow.NewHexValue = hexValue;
+					currRow.Updated = true;
+					currRow.NewImg = bm;
+				} else
+				{
+					errMsg.Text = "Invalid Hex Color code";
+				}
+			}
+		}
+
 
 		void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
@@ -806,6 +838,8 @@ namespace BeefThemeEditor
 			int c = color.ToArgb();
 			return c.ToString("x").PadLeft(8, '0');
 		}
+
+
 
 		void colorEditor1_ColorChanged(object sender, EventArgs e)
 		{
