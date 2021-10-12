@@ -46,7 +46,6 @@ namespace BeefThemeEditor
 			string dir = Utility.getConfigString("WorkingDirectory", Directory.GetCurrentDirectory());
 			folderBrowserDialog1.SelectedPath = dir;
 			openFileDialog1.InitialDirectory = dir;
-			openFileDialog1.FileName = "theme.toml";
 			tabControl1.Controls.Remove(tabPage1);
 			tabControl1.MouseUp += tabPage_MouseUp;
 
@@ -97,6 +96,8 @@ namespace BeefThemeEditor
 				case "OpenToml":
 					{
 						openFileDialog1.Filter = "Toml Files (*.toml)|*.toml";
+						openFileDialog1.Multiselect = false;
+						openFileDialog1.FileName = "theme.toml";
 						if (openFileDialog1.ShowDialog() == DialogResult.OK)
 						{
 							Cursor = Cursors.WaitCursor;
@@ -113,15 +114,21 @@ namespace BeefThemeEditor
 				case "OpenPNG":
 					{
 						openFileDialog1.Filter = "Png Files (*.png)|*.png";
+						openFileDialog1.Multiselect = true;
+						openFileDialog1.FileName = "UI.png";
+
 						if (openFileDialog1.ShowDialog() == DialogResult.OK)
 						{
 							Cursor = Cursors.WaitCursor;
 							openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
 							cleanUp();
 							label1.Text = getTheme(Path.GetDirectoryName(openFileDialog1.FileName));
-							if (processPng(openFileDialog1.FileName))
+							for (int i = 0; i < openFileDialog1.FileNames.Length; i++)
 							{
-								oType = OpenType.Png;
+								if (processPng(openFileDialog1.FileNames[i]))
+								{
+									oType = OpenType.Png;
+								}
 							}
 						}
 					}
