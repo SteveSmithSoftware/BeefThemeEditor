@@ -27,10 +27,10 @@ namespace BeefThemeEditor
 
 		public bool savePng(string fileName = null)
 		{
+			Bitmap orig = new Bitmap(400 * Scale, 160 * Scale);
 			try
 			{
 				if (rows.Count == 0) return false;
-				Bitmap orig = new Bitmap(400 * Scale, 160 * Scale);
 				foreach (RowData rd in rows)
 				{
 					int x1 = rd.X;
@@ -51,8 +51,10 @@ namespace BeefThemeEditor
 				}
 				if (!string.IsNullOrEmpty(fileName)) Filename = fileName;
 				orig.Save(Filename);
+				orig.Dispose();
 				return true;
 			} catch { }
+			orig.Dispose();
 			return false;
 		}
 	}

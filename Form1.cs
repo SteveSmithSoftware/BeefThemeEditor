@@ -295,6 +295,7 @@ namespace BeefThemeEditor
 				if (row >= 0)
 				{
 					currRow = currTD.rows[row];
+					currIx = row;
 					ContextMenu m = new ContextMenu();
 					m.MenuItems.Add(new MenuItem("Copy", copy_Click));
 					m.MenuItems.Add(new MenuItem("Paste", paste_Click));
