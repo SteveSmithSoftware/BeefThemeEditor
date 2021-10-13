@@ -143,7 +143,7 @@ namespace BeefThemeEditor
 							saveToml();
 							break;
 						case OpenType.Png:
-							currTD.savePng();
+							if (!currTD.savePng()) errMsg.Text = "Unable to save Png";
 							break;
 						default:
 							errMsg.Text = "Nothing Open to Save";
@@ -182,7 +182,7 @@ namespace BeefThemeEditor
 								if (saveFileDialog1.ShowDialog() == DialogResult.OK)
 								{
 									Cursor = Cursors.WaitCursor;
-									currTD.savePng(saveFileDialog1.FileName);
+									if (!currTD.savePng(saveFileDialog1.FileName)) errMsg.Text = "Unable to save Png";
 								}
 							}
 							break;
@@ -475,7 +475,7 @@ namespace BeefThemeEditor
 			if (col==4) currRow.NewImg.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 			else currRow.CurrImg.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 			string spawn = Utility.getConfigString("ImageEditor", "mspaint.exe");
-			Process process = Process.Start(spawn, fileName);
+			Process process = Process.Start(spawn, "\""+fileName+"\"");
 			process.WaitForExit();
 			process.Dispose();
 			Bitmap bm = (Bitmap)Bitmap.FromFile(fileName);
@@ -713,6 +713,7 @@ namespace BeefThemeEditor
 				}
 			}
 			setTabPage(tabControl1.TabPages[0]);
+			bm.Dispose();
 			return true;
 		}
 
@@ -728,7 +729,7 @@ namespace BeefThemeEditor
 						td.Filename = Path.Combine(dir, file);
 					} else
 					{
-						td.savePng(Path.Combine(dir, file));
+						if (!td.savePng(Path.Combine(dir, file))) errMsg.Text = "Unable to save Png";
 					}
 				}
 			}
@@ -736,7 +737,10 @@ namespace BeefThemeEditor
 			{
 				foreach (TabData td in tabs)
 				{
-					if (td.Datatype== TabData.DataType.png) td.savePng();
+					if (td.Datatype == TabData.DataType.png)
+					{
+						if (!td.savePng()) errMsg.Text = "Unable to save .png";
+					}
 				}
 			}
 			saveToml();

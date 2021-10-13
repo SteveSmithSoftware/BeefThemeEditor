@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace BeefThemeEditor
@@ -24,30 +25,35 @@ namespace BeefThemeEditor
 			Datatype = type;
 		}
 
-		public void savePng(string fileName = null)
+		public bool savePng(string fileName = null)
 		{
-			if (rows.Count == 0) return;
-			Bitmap orig = new Bitmap(400 * Scale, 160 * Scale);
-			foreach (RowData rd in rows)
+			try
 			{
-				int x1 = rd.X;
-				for (int x = 0; x < 20 * Scale; x++)
+				if (rows.Count == 0) return false;
+				Bitmap orig = new Bitmap(400 * Scale, 160 * Scale);
+				foreach (RowData rd in rows)
 				{
-					int y1 = rd.Y;
-					for (int y = 0; y < 20 * Scale; y++)
+					int x1 = rd.X;
+					for (int x = 0; x < 20 * Scale; x++)
 					{
-						Color c;
-						if (rd.Updated) c = rd.NewImg.GetPixel(x, y);
-						else c = rd.CurrImg.GetPixel(x, y);
-						orig.SetPixel(x1, y1, c);
-						y1++;
+						int y1 = rd.Y;
+						for (int y = 0; y < 20 * Scale; y++)
+						{
+							Color c;
+							if (rd.Updated) c = rd.NewImg.GetPixel(x, y);
+							else c = rd.CurrImg.GetPixel(x, y);
+							orig.SetPixel(x1, y1, c);
+							y1++;
+						}
+						x1++;
 					}
-					x1++;
+					rd.Updated = false;
 				}
-				rd.Updated = false;
-			}
-			if (!string.IsNullOrEmpty(fileName)) Filename = fileName;
-			orig.Save(Filename);
+				if (!string.IsNullOrEmpty(fileName)) Filename = fileName;
+				orig.Save(Filename);
+				return true;
+			} catch { }
+			return false;
 		}
 	}
 }
