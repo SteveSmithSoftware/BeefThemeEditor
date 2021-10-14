@@ -47,7 +47,7 @@ namespace BeefThemeEditor
 						}
 						x1++;
 					}
-					rd.Updated = false;
+					//rd.Updated = false;
 				}
 				if (!string.IsNullOrEmpty(fileName)) Filename = fileName;
 				orig.Save(Filename);

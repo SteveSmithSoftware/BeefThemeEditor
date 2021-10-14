@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.1525
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeefThemeEditor", "BeefThemeEditor.csproj", "{854888B3-9E98-471E-AD02-107315B58820}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelTest", "..\PixelTest\PixelTest.csproj", "{12B47761-8265-43A7-B53D-DF4D9B496830}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{854888B3-9E98-471E-AD02-107315B58820}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{854888B3-9E98-471E-AD02-107315B58820}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{854888B3-9E98-471E-AD02-107315B58820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12B47761-8265-43A7-B53D-DF4D9B496830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12B47761-8265-43A7-B53D-DF4D9B496830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12B47761-8265-43A7-B53D-DF4D9B496830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12B47761-8265-43A7-B53D-DF4D9B496830}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

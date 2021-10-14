@@ -85,7 +85,7 @@ namespace BeefThemeEditor
 							}
 							if (fileCnt == 0)
 							{
-								errMsg.Text = "No valid files found to process";
+								errMsg.Text = "No valid files found to open";
 							} else
 							{
 								oType = OpenType.Theme;
