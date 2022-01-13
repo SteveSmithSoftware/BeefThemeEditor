@@ -818,6 +818,7 @@ namespace BeefThemeEditor
 			colorEditor1.Visible = false;
 			if (e.RowIndex==currIx)
 			{
+				currIx = -1;
 				return;
 			}
 			currIx = e.RowIndex;

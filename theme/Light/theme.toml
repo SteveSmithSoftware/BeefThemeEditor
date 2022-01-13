@@ -1,0 +1,258 @@
+[Colors]
+Code = 0xff646152 #
+Keyword = 0xff0075ff #
+Literal = 0xffc85e13 #
+Identifier = 0xff646152 #
+Comment = 0xff75715e #
+Method = 0xff646152 #
+Type = 0xff4fc3bc #
+PrimitiveType = 0xff6da09c #
+Struct = 0xff4fc3bc #
+GenericParam = 0xff4fc3bc #
+RefType = 0xff4fc3bc #
+Interface = 0xff9a9eeb #
+Namespace = 0xff646152 #
+DisassemblyText = 0xffb0b0b0 #
+DisassemblyFileName = 0xffff0000 #
+Error = 0xffff0000 #
+BuildError = 0xffff8080 #
+BuildWarning = 0xffffff80 #
+VisibleWhiteSpace = 0xff9090c0 #
+
+[Theme]
+Text = 0xff000000 #
+Window = 0xffd7d7d7 #
+Background = 0xffd7d7d7 #
+SelectedOutline = 0xffcfae11 #
+MenuFocused = 0xffe5a910 #
+MenuSelected = 0xffcb9b80 #
+AutoCompleteSubText = 0xff000000 #
+AutoCompleteDocText = 0xff000000 #
+AutoCompleteActiveText = 0xffb0b0ff #
+WorkspaceDisabledText = 0xffa0a0a0 #
+WorkspaceFailedText = 0xffe04040 #
+WorkspaceManualIncludeText = 0xffe0e0ff #
+WorkspaceIgnoredText = 0xff909090 #
+
+[ArgBuilder]
+ArgBuilder001 = 0xff404040 #ArgBuilder (IDE)
+ArgBuilder002 = 0xff202020 #ArgBuilder (IDE)
+ArgBuilder003 = 0xfffef860 #ArgBuilder (IDE)
+ArgBuilder004 = 0xffff8080 #ArgBuilder (IDE)
+ArgBuilder005 = 0xfff0f0f0 #ArgBuilder (IDE)
+ArgBuilder006 = 0xffffffff #ArgBuilder (IDE)
+ArgBuilder007 = 0x80ffffff #ArgBuilder (IDE)
+ArgBuilder008 = 0xff000000 #ArgBuilder (IDE)
+ArgBuilder009 = 0xffd0d9e1 #ArgBuilder (IDE)
+ArgBuilder010 = 0xffe6ebef #ArgBuilder (IDE)
+ArgBuilder011 = 0xff707070 #ArgBuilder (IDE)
+
+[AutoComplete]
+AutoComplete001 = 0x80ffffff #AutoComplete (IDE.ui)
+AutoComplete002 = 0xffdddddd #AutoComplete (IDE.ui) Background
+AutoComplete003 = 0x80ff0000 #AutoComplete (IDE.ui)
+AutoComplete004 = 0xffc0c0c0 #AutoComplete (IDE.ui)
+AutoComplete005 = 0x20ff0000 #AutoComplete (IDE.ui)
+
+[BinaryDataContent]
+BinaryDataContent001 = 0xffffffff #BinaryDataContent (IDE.ui)
+BinaryDataContent002 = 0x40808000 #BinaryDataContent (IDE.ui)
+BinaryDataContent003 = 0xff60c0d0 #BinaryDataContent (IDE.ui)
+BinaryDataContent004 = 0xffffa000 #BinaryDataContent (IDE.ui)
+BinaryDataContent005 = 0xffffffff #BinaryDataContent (IDE.ui)
+BinaryDataContent006 = 0xffc0c0c0 #BinaryDataContent (IDE.ui)
+BinaryDataContent007 = 0x80a0a0a0 #BinaryDataContent (IDE.ui)
+BinaryDataContent008 = 0xff2f5c88 #BinaryDataContent (IDE.ui)
+BinaryDataContent009 = 0x8000c000 #BinaryDataContent (IDE.ui)
+
+[CharData]
+CharData001 = 0x7f7f7f7f #CharData (Beefy.gfx)
+
+[CompositionDef]
+CompositionDef001 = 0xffff0000 #CompositionDef (Beefy.widgets)
+
+[ConfigDataGroup]
+ConfigDataGroup001 = 0x60ffffff #ConfigDataGroup (IDE.ui)
+ConfigDataGroup002 = 0xffffffff #ConfigDataGroup (IDE.ui)
+
+[DarkTooltipManager]
+DarkTooltipManager001 = 0x80000000 #DarkTooltipManager (Beefy.theme.dark)
+DarkTooltipManager002 = 0xffffffff #DarkTooltipManager (Beefy.theme.dark)
+
+[DistinctOptionBuilder]
+DistinctOptionBuilder001 = 0xffc0c0c0 #DistinctOptionBuilder (IDE.ui)
+DistinctOptionBuilder002 = 0xffffffff #DistinctOptionBuilder (IDE.ui)
+DistinctOptionBuilder003 = 0xffff8080 #DistinctOptionBuilder (IDE.ui)
+
+[GraphicsBase]
+GraphicsBase001 = 0xffffffff #GraphicsBase (Beefy.gfx) Graphics (Beefy.gfx)
+GraphicsBase002 = 0xff00ff00 #GraphicsBase (Beefy.gfx) Graphics (Beefy.gfx)
+GraphicsBase003 = 0xff0000 #GraphicsBase (Beefy.gfx) Graphics (Beefy.gfx)
+GraphicsBase004 = 0xff #GraphicsBase (Beefy.gfx) Graphics (Beefy.gfx)
+
+[HiliteZone]
+HiliteZone001 = 0x10ffffff #HiliteZone (BeefPerf)
+HiliteZone002 = 0xa000ff00 #HiliteZone (BeefPerf)
+HiliteZone003 = 0xff000000 #HiliteZone (BeefPerf)
+HiliteZone004 = 0xffffff #HiliteZone (BeefPerf)
+HiliteZone005 = 0xe0000000 #HiliteZone (BeefPerf)
+HiliteZone006 = 0xff00a000 #HiliteZone (BeefPerf)
+HiliteZone007 = 0x80a0a0a0 #HiliteZone (BeefPerf)
+HiliteZone008 = 0x80ffffff #HiliteZone (BeefPerf)
+HiliteZone009 = 0xffa0a0a0 #HiliteZone (BeefPerf)
+HiliteZone010 = 0xffffffff #HiliteZone (BeefPerf)
+HiliteZone011 = 0xff303030 #HiliteZone (BeefPerf)
+HiliteZone012 = 0x60a0a0a0 #HiliteZone (BeefPerf)
+HiliteZone013 = 0x60606060 #HiliteZone (BeefPerf)
+HiliteZone014 = 0x80404080 #HiliteZone (BeefPerf)
+HiliteZone015 = 0xff202020 #HiliteZone (BeefPerf)
+HiliteZone016 = 0x202020 #HiliteZone (BeefPerf)
+
+[HoverResolveTask]
+HoverResolveTask001 = 0xffff8080 #HoverResolveTask (IDE.ui)
+HoverResolveTask002 = 0xff595959 #HoverResolveTask (IDE.ui)
+HoverResolveTask003 = 0xffffffff #HoverResolveTask (IDE.ui)
+HoverResolveTask004 = 0xffc0c0c0 #HoverResolveTask (IDE.ui)
+HoverResolveTask005 = 0x60ffffff #HoverResolveTask (IDE.ui)
+HoverResolveTask006 = 0xff000000 #HoverResolveTask (IDE.ui) Source Line Numbers
+HoverResolveTask007 = 0x80ff0000 #HoverResolveTask (IDE.ui)
+HoverResolveTask008 = 0x50ffffff #HoverResolveTask (IDE.ui)
+HoverResolveTask009 = 0x50d0d0d0 #HoverResolveTask (IDE.ui)
+HoverResolveTask010 = 0xffffffff #HoverResolveTask (IDE.ui)
+HoverResolveTask011 = 0x8080ffff #HoverResolveTask (IDE.ui)
+
+[IDEUtils]
+IDEUtils001 = 0xff0000 #IDEUtils (IDE)
+IDEUtils002 = 0xff707070 #IDEUtils (IDE)
+IDEUtils003 = 0x80000000 #IDEUtils (IDE)
+IDEUtils004 = 0x7f7f7f7f #IDEUtils (IDE)
+IDEUtils005 = 0xffa0a0a0 #IDEUtils (IDE)
+IDEUtils006 = 0xff80a080 #IDEUtils (IDE)
+
+[JumpEntry]
+JumpEntry001 = 0xffffeafe #JumpEntry (IDE.ui)
+JumpEntry002 = 0xff8a7489 #JumpEntry (IDE.ui)
+JumpEntry003 = 0xffeaf5ff #JumpEntry (IDE.ui)
+JumpEntry004 = 0xff72828f #JumpEntry (IDE.ui)
+JumpEntry005 = 0x80ffffff #JumpEntry (IDE.ui)
+
+[PendingWatch]
+PendingWatch001 = 0xffb0b0ff #PendingWatch (IDE.ui)
+PendingWatch002 = 0xffe0e0ff #PendingWatch (IDE.ui)
+PendingWatch003 = 0x80000000 #PendingWatch (IDE.ui)
+PendingWatch004 = 0xffffffff #PendingWatch (IDE.ui)
+PendingWatch005 = 0x40ff0000 #PendingWatch (IDE.ui)
+PendingWatch006 = 0x20000000 #PendingWatch (IDE.ui)
+
+[PropEntry]
+PropEntry001 = 0xffe8e8e8 #PropEntry (IDE.ui)
+PropEntry002 = 0xffffffff #PropEntry (IDE.ui)
+PropEntry003 = 0x80ffffff #PropEntry (IDE.ui)
+PropEntry004 = 0x20ffffff #PropEntry (IDE.ui)
+PropEntry005 = 0xffa0a0a0 #PropEntry (IDE.ui)
+PropEntry006 = 0xff000000 #PropEntry (IDE.ui)
+PropEntry007 = 0xffc0c0c0 #PropEntry (IDE.ui)
+PropEntry008 = 0xffffff #PropEntry (IDE.ui)
+
+[ReplaceSymbolData]
+ReplaceSymbolData001 = 0xffffffff #ReplaceSymbolData (IDE.ui)
+ReplaceSymbolData002 = 0xfff0b0b0 #ReplaceSymbolData (IDE.ui)
+ReplaceSymbolData003 = 0xffe0e0e0 #ReplaceSymbolData (IDE.ui)
+ReplaceSymbolData004 = 0xffff7070 #ReplaceSymbolData (IDE.ui)
+ReplaceSymbolData005 = 0xffffb0b0 #ReplaceSymbolData (IDE.ui)
+
+[SourceEditBatchHelper]
+SourceEditBatchHelper010 = 0xffff0000 #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper014 = 0x28ffffff #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper015 = 0x18ffffff #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper016 = 0x80ffe0b0 #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper017 = 0x50d0c090 #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper018 = 0xffffd200 #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper019 = 0x80ffd200 #SourceEditBatchHelper (IDE.ui)
+SourceEditBatchHelper020 = 0x50ffe0b0 #SourceEditBatchHelper (IDE.ui)
+
+[TrackedTextElement]
+Breakpoint001 = 0xffffffff #Breakpoint (IDE.Debugger)
+Breakpoint002 = 0x8080ffff #Breakpoint (IDE.Debugger)
+
+[WatchEntry]
+WatchEntry001 = 0xffff4040 #WatchEntry (IDE.ui)
+WatchEntry002 = 0x60404040 #WatchEntry (IDE.ui)
+WatchEntry003 = 0xff384858 #WatchEntry (IDE.ui)
+WatchEntry004 = 0x80384858 #WatchEntry (IDE.ui)
+WatchEntry005 = 0x50ffe0b0 #WatchEntry (IDE.ui)
+WatchEntry006 = 0x34ffe0b0 #WatchEntry (IDE.ui)
+WatchEntry007 = 0xd0ffffff #WatchEntry (IDE.ui)
+WatchEntry008 = 0xffffffff #WatchEntry (IDE.ui)
+WatchEntry009 = 0x80ffffff #WatchEntry (IDE.ui)
+
+[Widget]
+DarkSmartEdit001 = 0xffcc9600 #DarkSmartEdit (Beefy.theme.dark)
+DarkButton002 = 0xff000000 #DarkButton (Beefy.theme.dark) DarkTabButtonClose (Beefy.theme.dark) DarkTabMenuButton (Beefy.theme.dark) DarkComboBox (Beefy.theme.dark) DarkTabbedView (Beefy.theme.dark) DarkEditWidgetContent (Beefy.theme.dark) LabelWidget (Beefy.widgets) BreakpointListViewItem (IDE.ui) CBMenuWidget (Beefy.theme.dark) DarkEditWidget (Beefy.theme.dark) BreakpointListView (IDE.ui) BreakpointPanel (IDE.ui)
+DarkButton003 = 0x80ffffff #DarkButton (Beefy.theme.dark) DarkTabButtonClose (Beefy.theme.dark) DarkTabMenuButton (Beefy.theme.dark) DarkCheckBox (Beefy.theme.dark) DarkComboBox (Beefy.theme.dark) DockedWidget (Beefy.widgets) DockingProxy (Beefy.widgets) DarkTabbedView (Beefy.theme.dark) CommentArea (IDE.ui) DataArea (IDE.ui) TypeArea (IDE.ui) BreakpointListViewItem (IDE.ui) ClassViewListViewItem (IDE.ui) ErrorsListViewItem (IDE.ui) ProjectListViewItem (IDE.ui) CBMenuWidget (Beefy.theme.dark) BreakpointListView (IDE.ui) ClassViewListView (IDE.ui) ErrorsListView (IDE.ui) ProjectListView (IDE.ui) BreakpointPanel (IDE.ui) ProjectPanel (IDE.ui)
+OutputActionButton004 = 0xffffff #OutputActionButton (IDE.ui) OutputPanel (IDE.ui)
+OutputActionButton005 = 0x60000000 #OutputActionButton (IDE.ui) OutputPanel (IDE.ui) StatusBar (IDE.ui)
+DarkTabButtonClose006 = 0xffff0000 #DarkTabButtonClose (Beefy.theme.dark) DarkTabMenuButton (Beefy.theme.dark) GoToLineDialog (IDE.ui) DarkTabbedView (Beefy.theme.dark) DarkMenuItem (Beefy.theme.dark) DarkMenuWidget (Beefy.theme.dark) FindEdit (IDE.ui) DarkMenuContainer (Beefy.theme.dark) Board (IDE) QuickFind (IDE.ui)
+DarkTabButtonClose007 = 0x60ffffff #DarkTabButtonClose (Beefy.theme.dark) DarkTabMenuButton (Beefy.theme.dark) DarkTabbedView (Beefy.theme.dark) FindEdit (IDE.ui) QuickFind (IDE.ui)
+DarkTabButtonClose008 = 0xfff7a900 #DarkTabButtonClose (Beefy.theme.dark) DarkTabMenuButton (Beefy.theme.dark) DarkTabbedView (Beefy.theme.dark)
+DarkTabButtonClose009 = 0x80ff0000 #DarkTabButtonClose (Beefy.theme.dark) DarkTabMenuButton (Beefy.theme.dark) DarkTabbedView (Beefy.theme.dark) ProjectListViewItem (IDE.ui) ScrollableWidget (Beefy.widgets) ProjectListView (IDE.ui) ScrollContentContainer (Beefy.widgets) ProjectPanel (IDE.ui)
+DarkTreeOpenButton010 = 0x400000ff #DarkTreeOpenButton (Beefy.theme.dark) DarkListViewItem (Beefy.theme.dark) DarkListView (Beefy.theme.dark)
+DarkTreeOpenButton011 = 0xff6f9761 #DarkTreeOpenButton (Beefy.theme.dark) DarkListViewItem (Beefy.theme.dark) DarkListView (Beefy.theme.dark)
+DarkTreeOpenButton012 = 0xff95a68f #DarkTreeOpenButton (Beefy.theme.dark) DarkListViewItem (Beefy.theme.dark) DarkListView (Beefy.theme.dark)
+DarkTreeOpenButton013 = 0xcffffff #DarkTreeOpenButton (Beefy.theme.dark) DarkListViewItem (Beefy.theme.dark) DarkListView (Beefy.theme.dark)
+DarkTreeOpenButton014 = 0xff707070 #DarkTreeOpenButton (Beefy.theme.dark) DarkListViewItem (Beefy.theme.dark) DarkListView (Beefy.theme.dark)
+DarkTreeOpenButton015 = 0xff888888 #DarkTreeOpenButton (Beefy.theme.dark) DarkListViewItem (Beefy.theme.dark) DarkListView (Beefy.theme.dark)
+DarkComboBox016 = 0x1fff0000 #DarkComboBox (Beefy.theme.dark) CBMenuWidget (Beefy.theme.dark)
+SessionComboBox017 = 0xffb0b0b0 #SessionComboBox (IDE.ui)
+OpenFileInSolutionDialog018 = 0xff404040 #OpenFileInSolutionDialog (IDE.ui) EntryListViewItem (IDE.ui) EntryListView (IDE.ui) StatusBar (IDE.ui)
+OpenFileInSolutionDialog019 = 0xff202020 #OpenFileInSolutionDialog (IDE.ui) EntryListViewItem (IDE.ui) EntryListView (IDE.ui)
+DarkDockingFrame020 = 0x30ffffff #DarkDockingFrame (Beefy.theme.dark)
+CommentArea021 = 0xffc0c0c0 #CommentArea (IDE.ui) DataArea (IDE.ui)
+TypeArea022 = 0xffffffff #TypeArea (IDE.ui) ImmediateWidgetContent (IDE.ui) BreakpointListViewItem (IDE.ui) ClassViewListViewItem (IDE.ui) ErrorsListViewItem (IDE.ui) ProjectListViewItem (IDE.ui) DarkMenuItem (Beefy.theme.dark) DarkMenuWidget (Beefy.theme.dark) FindEdit (IDE.ui) ImmediateWidget (IDE.ui) BreakpointListView (IDE.ui) ClassViewListView (IDE.ui) ErrorsListView (IDE.ui) ProjectListView (IDE.ui) DarkMenuContainer (Beefy.theme.dark) Board (IDE) ImmediateInfoButton (IDE.ui) BreakpointPanel (IDE.ui) ProjectPanel (IDE.ui) PanelHeader (IDE.ui) QuickFind (IDE.ui)
+TypeArea023 = 0x60505050 #TypeArea (IDE.ui) ClassViewListViewItem (IDE.ui) ClassViewListView (IDE.ui)
+DarkEditWidgetContent024 = 0xffd5e3f0 #DarkEditWidgetContent (Beefy.theme.dark) DarkEditWidget (Beefy.theme.dark)
+DarkEditWidgetContent025 = 0x4000ff00 #DarkEditWidgetContent (Beefy.theme.dark) DarkEditWidget (Beefy.theme.dark)
+DarkEditWidgetContent026 = 0x40ff0000 #DarkEditWidgetContent (Beefy.theme.dark) DarkEditWidget (Beefy.theme.dark)
+OutputWidgetContent027 = 0xfffebd57 #OutputWidgetContent (IDE.ui) OutputWidget (IDE.ui)
+ImmediateWidgetContent028 = 0xffff4040 #ImmediateWidgetContent (IDE.ui) ImmediateWidget (IDE.ui) ImmediateInfoButton (IDE.ui)
+ImmediateWidgetContent029 = 0xff000000 #ImmediateWidgetContent (IDE.ui) ImmediateWidget (IDE.ui) Board (IDE) ImmediateInfoButton (IDE.ui) StatusBar (IDE.ui)
+DarkInfiniteScrollbar030 = 0x40000000 #DarkInfiniteScrollbar (Beefy.theme.dark)
+FindListViewItem031 = 0xff808080 #FindListViewItem (BeefPerf) FindListView (BeefPerf)
+FindListViewItem032 = 0xffff8080 #FindListViewItem (BeefPerf) ErrorsListViewItem (IDE.ui) FindListView (BeefPerf) ErrorsListView (IDE.ui) Popup (IDE)
+ProfileListViewItem033 = 0xa0595959 #ProfileListViewItem (BeefPerf) ProfileListView (BeefPerf)
+ErrorsListViewItem034 = 0xffffff80 #ErrorsListViewItem (IDE.ui) ErrorsListView (IDE.ui)
+DarkMenuItem035 = 0xffa8a8a8 #DarkMenuItem (Beefy.theme.dark) DarkMenuWidget (Beefy.theme.dark) DarkMenuContainer (Beefy.theme.dark)
+DarkMenuItem036 = 0x80000000 #DarkMenuItem (Beefy.theme.dark) DarkMenuWidget (Beefy.theme.dark) DarkMenuContainer (Beefy.theme.dark)
+MemoryRepListView037 = 0x80ffff00 #MemoryRepListView (IDE.ui) MemoryVarListView (IDE.ui) MemoryPanel (IDE.ui)
+Board038 = 0xff000000 #Board (IDE)
+Board039 = 0xd080f080 #Board (IDE)
+Board040 = 0xff00ff00 #Board (IDE) StatusBar (IDE.ui)
+Board041 = 0xff0000ff #Board (IDE)
+StatusBar042 = 0xff800000 #StatusBar (IDE.ui)
+StatusBar043 = 0xff35306a #StatusBar (IDE.ui)
+StatusBar044 = 0xffb65d08 #StatusBar (IDE.ui)
+StatusBar045 = 0xff562143 #StatusBar (IDE.ui)
+StatusBar046 = 0xff101010 #StatusBar (IDE.ui)
+StatusBar047 = 0x40202080 #StatusBar (IDE.ui)
+
+[Panel]
+WorkspaceProperties001 = 0xffe8e8e8 #WorkspaceProperties (IDE.ui) ProjectProperties (IDE.ui)
+WorkspaceProperties002 = 0xffffffff #WorkspaceProperties (IDE.ui) WelcomePanel (IDE.ui) TypeWildcardEditWidget (IDE.ui) PanelPopup (IDE.ui) ModulePanel (IDE.ui) DiagnosticsPanel (IDE.ui)
+WorkspaceProperties003 = 0xffc0c0c0 #WorkspaceProperties (IDE.ui)
+WelcomePanel004 = 0x80ffffff #WelcomePanel (IDE.ui)
+WelcomePanel005 = 0x40000000 #WelcomePanel (IDE.ui)
+WelcomePanel006 = 0xffe0e0ff #WelcomePanel (IDE.ui)
+WelcomePanel007 = 0xffa0a0a0 #WelcomePanel (IDE.ui) TypeWildcardEditWidget (IDE.ui)
+TypeWildcardEditWidget008 = 0xffff8080 #TypeWildcardEditWidget (IDE.ui) ModulePanel (IDE.ui)
+ProjectProperties009 = 0xffff6060 #ProjectProperties (IDE.ui)
+PanelPopup010 = 0x80ff0000 #PanelPopup (IDE.ui)
+PanelPopup011 = 0x80000000 #PanelPopup (IDE.ui)
+DiagnosticsPanel012 = 0x40ff0000 #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel013 = 0xa0000000 #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel014 = 0x40ffffff #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel015 = 0xff00ff00 #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel016 = 0x70ffffff #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel017 = 0xa0ffffff #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel018 = 0x60ffffff #DiagnosticsPanel (IDE.ui)
+DiagnosticsPanel019 = 0x20ffffff #DiagnosticsPanel (IDE.ui)
+
